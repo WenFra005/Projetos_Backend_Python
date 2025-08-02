@@ -56,9 +56,9 @@ def complete_task(task_id):
 
 def delete_task(task_id):
     tasks = load_tasks()
-    for i, tks in enumerate(task_id):
+    for tks in tasks:
         if tks["id"] == task_id:
-            removed = tasks.pop(i)
+            removed = tasks.pop(task_id)
             save_tasks(tasks)
             print(f"Tarefa removida: {removed['description']}")
             return
