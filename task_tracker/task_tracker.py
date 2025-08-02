@@ -22,3 +22,12 @@ def add_task(description):
     save_tasks(tasks)
     print(f"Tarefa adicionada: {description}")
 
+def list_tasks():
+    tasks = load_tasks()
+    if not tasks:
+        print("Nenhuma tarefa encontrada.")
+        return
+    for i, tks in enumerate(tasks, 1):
+        status = "concluída" if tks["concluida"] else "pendente"
+        print(f"{i}. {t['descricao']} - {status}")
+        
