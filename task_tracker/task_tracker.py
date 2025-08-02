@@ -1,8 +1,6 @@
 import argparse
-from asyncio import tasks
 import json
 import os
-from turtle import st
 
 file_tasks = "tasks.json"
 
