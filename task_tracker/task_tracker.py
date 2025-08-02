@@ -43,14 +43,16 @@ def list_tasks():
     for tks in tasks:
         print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
         
-def complete_task(index):
+def complete_task(task_id):
     tasks = load_tasks()
-    if 0 < index <= len(tasks):
-        tasks[index - 1]["concluida"] = True
-        save_tasks(tasks)
-        print(f"Tarefa marcada como concluída: {tasks[index - 1]['descricao']}")
-    else:
-        print("Índice inválido")
+    for tks in tasks:
+        if tks["id"] == task_id:
+            tks["status"] = "done"
+            tks["updateAt"] = now()
+            save_tasks(tasks)
+            print(f"Tarefa marcada como concluída: {tks['description']}")
+            return
+    print("ID inválido")
 
 def delete_task(index):
     tasks = load_tasks()
