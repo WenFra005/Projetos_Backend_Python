@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "description": "Comprar p\u00e3o",
+        "status": "todo",
+        "createdAt": "2025-08-02T17:21:05",
+        "updateAt": "2025-08-02T17:21:05"
+    },
+    {
+        "id": 2,
+        "description": "Fazer a li\u00e7\u00e3o de casa",
+        "status": "done",
+        "createdAt": "2025-08-02T17:21:26",
+        "updateAt": "2025-08-02T17:22:43"
+    }
+]

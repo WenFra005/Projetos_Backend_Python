@@ -1,5 +1,4 @@
 import argparse
-from hmac import new
 import json
 import os
 
@@ -42,7 +41,19 @@ def list_tasks():
         return
     for tks in tasks:
         print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
-        
+
+def list_by_status(status):
+    tasks = load_tasks()
+    filtered = [tks for tks in tasks if tks["status"] == status]
+
+    if not filtered:
+        print(f"Neunuma tarefa com status '{status}'.")
+        return
+    
+    print(f"Tarefas com status '{status}'.")
+    for tks in filtered:
+        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
+
 def complete_task(task_id):
     tasks = load_tasks()
     for tks in tasks:
