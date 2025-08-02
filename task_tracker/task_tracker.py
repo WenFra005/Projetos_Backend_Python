@@ -2,6 +2,7 @@ import argparse
 from asyncio import tasks
 import json
 import os
+from turtle import st
 
 file_tasks = "tasks.json"
 
@@ -49,3 +50,38 @@ def delete_task(index):
     else:
         print("Índice inválido.")
 
+def main():
+    parser = argparse.ArgumentParser(description="Rastreador de tarefas (CLI)")
+    subparsers = parser.add_subparsers(dest="command")
+
+    # Adicionar tarefa
+    parser_add = subparsers.add_parser("add", help="Adicionar uma nova tarefa")
+    parser_add.add_argument("description", type=str, help="Descrição da tarefa")
+
+    # Listar tarefas
+    subparsers.add_parser("list", help="Listar todas as tarefas")
+
+    # Concluir tarefa
+    parser_complete = subparsers.add_parser("complete", help="Concluir uma tarefa")
+    parser_complete.add_argument("index", type=int, help="Índice da tarefa a ser concluída")
+
+    # Remover tarefa
+    parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
+    parser_delete.add_argument("index", type=int, help="Índice da tarefa a ser removida")
+
+    args = parser.parse_args()
+
+    match args.command:
+        case "add":
+            add_task(args.description)
+        case "list":
+            list_tasks()
+        case "complete":
+            complete_task(args.index)
+        case "delete":
+            delete_task(args.index)
+        case _:
+            parser.print_help()
+
+if __name__ == "__main__":
+    main()
