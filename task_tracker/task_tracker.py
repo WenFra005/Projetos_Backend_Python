@@ -29,7 +29,7 @@ def list_tasks():
         return
     for i, tks in enumerate(tasks, 1):
         status = "concluída" if tks["concluida"] else "pendente"
-        print(f"{i}. {t['descricao']} - {status}")
+        print(f"{i}. {tks['descricao']} - {status}")
         
 def complete_task(index):
     tasks = load_tasks()
@@ -48,3 +48,4 @@ def delete_task(index):
         print(f"Tarefa removida: {removed_task['descricao']}")
     else:
         print("Índice inválido.")
+
