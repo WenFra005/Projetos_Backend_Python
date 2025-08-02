@@ -63,7 +63,7 @@ def delete_task(task_id):
             print(f"Tarefa removida: {removed['description']}")
             return
     print("ID inválido")
-    
+
 def main():
     parser = argparse.ArgumentParser(description="Rastreador de tarefas (CLI)")
     subparsers = parser.add_subparsers(dest="command")
@@ -77,11 +77,11 @@ def main():
 
     # Concluir tarefa
     parser_complete = subparsers.add_parser("complete", help="Concluir uma tarefa")
-    parser_complete.add_argument("index", type=int, help="Índice da tarefa a ser concluída")
+    parser_complete.add_argument("id", type=int, help="Índice da tarefa a ser concluída")
 
     # Remover tarefa
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
-    parser_delete.add_argument("index", type=int, help="Índice da tarefa a ser removida")
+    parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
 
     args = parser.parse_args()
 
@@ -91,9 +91,9 @@ def main():
         case "list":
             list_tasks()
         case "complete":
-            complete_task(args.index)
+            complete_task(args.id)
         case "delete":
-            delete_task(args.index)
+            delete_task(args.id)
         case _:
             parser.print_help()
 
