@@ -33,11 +33,11 @@ def list_tasks():
 def complete_task(index):
     tasks = load_tasks()
     if 0 < index <= len(tasks):
-        removed_task = tasks.pop(index - 1)
+        tasks[index - 1]["concluida"] = True
         save_tasks(tasks)
-        print(f"Tarefa concluída: {removed_task['descricao']}")
+        print(f"Tarefa marcada como concluída: {tasks[index - 1]['description']}")
     else:
-        print("Índice inválido.")
+        print("Índice inválido")
 
 def delete_task(index):
     tasks = load_tasks()
