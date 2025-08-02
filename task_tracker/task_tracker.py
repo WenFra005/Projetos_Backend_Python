@@ -35,7 +35,7 @@ def complete_task(index):
     if 0 < index <= len(tasks):
         tasks[index - 1]["concluida"] = True
         save_tasks(tasks)
-        print(f"Tarefa marcada como concluída: {tasks[index - 1]['description']}")
+        print(f"Tarefa marcada como concluída: {tasks[index - 1]['descricao']}")
     else:
         print("Índice inválido")
 
