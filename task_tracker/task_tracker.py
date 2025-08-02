@@ -59,10 +59,21 @@ def complete_task(task_id):
     for tks in tasks:
         if tks["id"] == task_id:
             tks["status"] = "done"
-            tks["updateAt"] = now()
+            tks["updatedAt"] = now()
             save_tasks(tasks)
             print(f"Tarefa marcada como concluída: {tks['description']}")
             return
+    print("ID inválido")
+
+def update_tasks(task_id, new_description):
+    tasks = load_tasks()
+
+    for tks in tasks:
+        if tks["id"] == task_id:
+            tks["description"] = new_description
+            tks["updatedAt"] = now()
+            save_tasks(tasks)
+            print(f"Descrição atualizada: {new_description}")
     print("ID inválido")
 
 def delete_task(task_id):
