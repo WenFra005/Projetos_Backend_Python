@@ -54,15 +54,16 @@ def complete_task(task_id):
             return
     print("ID inválido")
 
-def delete_task(index):
+def delete_task(task_id):
     tasks = load_tasks()
-    if 0 < index <= len(tasks):
-        removed_task = tasks.pop(index - 1)
-        save_tasks(tasks)
-        print(f"Tarefa removida: {removed_task['descricao']}")
-    else:
-        print("Índice inválido.")
-
+    for i, tks in enumerate(task_id):
+        if tks["id"] == task_id:
+            removed = tasks.pop(i)
+            save_tasks(tasks)
+            print(f"Tarefa removida: {removed['description']}")
+            return
+    print("ID inválido")
+    
 def main():
     parser = argparse.ArgumentParser(description="Rastreador de tarefas (CLI)")
     subparsers = parser.add_subparsers(dest="command")
