@@ -39,3 +39,12 @@ def complete_task(index):
         print(f"Tarefa concluída: {removed_task['descricao']}")
     else:
         print("Índice inválido.")
+
+def delete_task(index):
+    tasks = load_tasks()
+    if 0 < index <= len(tasks):
+        removed_task = tasks.pop(index - 1)
+        save_tasks(tasks)
+        print(f"Tarefa removida: {removed_task['descricao']}")
+    else:
+        print("Índice inválido.")
