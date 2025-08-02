@@ -54,14 +54,19 @@ def list_by_status(status):
     for tks in filtered:
         print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
 
-def complete_task(task_id):
+def mark_status_tasks(task_id, status):
+    valid_status = {"todo", "in_progress", "done"}
+    if status not in valid_status:
+        print(f"Status inválido. Escolha entre: {', '. join(valid_status)}")
+    
     tasks = load_tasks()
+
     for tks in tasks:
         if tks["id"] == task_id:
             tks["status"] = "done"
             tks["updatedAt"] = now()
             save_tasks(tasks)
-            print(f"Tarefa marcada como concluída: {tks['description']}")
+            print(f"Tarefa atualizada: {tks['description']} -- status: '{status}'")
             return
     print("ID inválido")
 
