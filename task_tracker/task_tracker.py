@@ -40,9 +40,8 @@ def list_tasks():
     if not tasks:
         print("Nenhuma tarefa encontrada.")
         return
-    for i, tks in enumerate(tasks, 1):
-        status = "concluída" if tks["concluida"] else "pendente"
-        print(f"{i}. {tks['descricao']} - {status}")
+    for tks in tasks:
+        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
         
 def complete_task(index):
     tasks = load_tasks()
