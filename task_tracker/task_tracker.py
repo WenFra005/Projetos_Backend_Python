@@ -1,8 +1,14 @@
 import argparse
+from hmac import new
 import json
 import os
 
+from datetime import datetime
+
 file_tasks = "tasks.json"
+
+def now():
+    return datetime.now().isoformat(timespec="seconds")
 
 def load_tasks():
     if os.path.exists(file_tasks):
@@ -17,7 +23,15 @@ def save_tasks(tasks):
 
 def add_task(description):
     tasks = load_tasks()
-    tasks.append({"descricao": description, "concluida": False})
+    taks_id = max([tks["id"] for tks in tasks], default=0) + 1
+    new_tasks = {
+        "id": taks_id,
+        "description": description,
+        "status": "todo",
+        "createdAt": now(),
+        "updateAt": now()
+    }
+    tasks.append(new_tasks)
     save_tasks(tasks)
     print(f"Tarefa adicionada: {description}")
 
