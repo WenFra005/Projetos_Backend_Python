@@ -16,3 +16,9 @@ def save_tasks(tasks):
         json.dump(tasks, file, indent=4)
 
 
+def add_task(description):
+    tasks = load_tasks()
+    tasks.append({"descricao": description, "concluida": False})
+    save_tasks(tasks)
+    print(f"Tarefa adicionada: {description}")
+
