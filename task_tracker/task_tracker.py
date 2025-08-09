@@ -2,12 +2,7 @@ import argparse
 import json
 import os
 
-from datetime import datetime
-
 file_tasks = "tasks.json"
-
-def now():
-    return datetime.now().isoformat(timespec="seconds")
 
 def load_tasks():
     if os.path.exists(file_tasks):
@@ -22,15 +17,7 @@ def save_tasks(tasks):
 
 def add_task(description):
     tasks = load_tasks()
-    taks_id = max([tks["id"] for tks in tasks], default=0) + 1
-    new_tasks = {
-        "id": taks_id,
-        "description": description,
-        "status": "todo",
-        "createdAt": now(),
-        "updateAt": now()
-    }
-    tasks.append(new_tasks)
+    tasks.append({"descricao": description, "concluida": False})
     save_tasks(tasks)
     print(f"Tarefa adicionada: {description}")
 
@@ -39,57 +26,27 @@ def list_tasks():
     if not tasks:
         print("Nenhuma tarefa encontrada.")
         return
-    for tks in tasks:
-        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
-
-def list_by_status(status):
+    for i, tks in enumerate(tasks, 1):
+        status = "concluída" if tks["concluida"] else "pendente"
+        print(f"{i}. {tks['descricao']} - {status}")
+        
+def complete_task(index):
     tasks = load_tasks()
-    filtered = [tks for tks in tasks if tks["status"] == status]
+    if 0 < index <= len(tasks):
+        tasks[index - 1]["concluida"] = True
+        save_tasks(tasks)
+        print(f"Tarefa marcada como concluída: {tasks[index - 1]['descricao']}")
+    else:
+        print("Índice inválido")
 
-    if not filtered:
-        print(f"Neunuma tarefa com status '{status}'.")
-        return
-    
-    print(f"Tarefas com status '{status}'.")
-    for tks in filtered:
-        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
-
-def mark_status_tasks(task_id, status):
-    valid_status = {"todo", "in_progress", "done"}
-    if status not in valid_status:
-        print(f"Status inválido. Escolha entre: {', '. join(valid_status)}")
-    
+def delete_task(index):
     tasks = load_tasks()
-
-    for tks in tasks:
-        if tks["id"] == task_id:
-            tks["status"] = "done"
-            tks["updatedAt"] = now()
-            save_tasks(tasks)
-            print(f"Tarefa atualizada: {tks['description']} -- status: '{status}'")
-            return
-    print("ID inválido")
-
-def update_tasks(task_id, new_description):
-    tasks = load_tasks()
-
-    for tks in tasks:
-        if tks["id"] == task_id:
-            tks["description"] = new_description
-            tks["updatedAt"] = now()
-            save_tasks(tasks)
-            print(f"Descrição atualizada: {new_description}")
-    print("ID inválido")
-
-def delete_task(task_id):
-    tasks = load_tasks()
-    for tks in tasks:
-        if tks["id"] == task_id:
-            removed = tasks.pop(task_id)
-            save_tasks(tasks)
-            print(f"Tarefa removida: {removed['description']}")
-            return
-    print("ID inválido")
+    if 0 < index <= len(tasks):
+        removed_task = tasks.pop(index - 1)
+        save_tasks(tasks)
+        print(f"Tarefa removida: {removed_task['descricao']}")
+    else:
+        print("Índice inválido.")
 
 def main():
     parser = argparse.ArgumentParser(description="Rastreador de tarefas (CLI)")
@@ -104,11 +61,11 @@ def main():
 
     # Concluir tarefa
     parser_complete = subparsers.add_parser("complete", help="Concluir uma tarefa")
-    parser_complete.add_argument("id", type=int, help="Índice da tarefa a ser concluída")
+    parser_complete.add_argument("index", type=int, help="Índice da tarefa a ser concluída")
 
     # Remover tarefa
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
-    parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
+    parser_delete.add_argument("index", type=int, help="Índice da tarefa a ser removida")
 
     args = parser.parse_args()
 
@@ -118,9 +75,9 @@ def main():
         case "list":
             list_tasks()
         case "complete":
-            complete_task(args.id)
+            complete_task(args.index)
         case "delete":
-            delete_task(args.id)
+            delete_task(args.index)
         case _:
             parser.print_help()
 
