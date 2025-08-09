@@ -19,7 +19,6 @@ def save_tasks(tasks):
     with open(file_tasks, 'w') as file:
         json.dump(tasks, file, indent=4)
 
-
 def add_task(description):
     tasks = load_tasks()
     taks_id = max([tks["id"] for tks in tasks], default=0) + 1
@@ -28,7 +27,7 @@ def add_task(description):
         "description": description,
         "status": "todo",
         "createdAt": now(),
-        "updateAt": now()
+        "updatedAt": now()
     }
     tasks.append(new_tasks)
     save_tasks(tasks)
@@ -40,30 +39,31 @@ def list_tasks():
         print("Nenhuma tarefa encontrada.")
         return
     for tks in tasks:
-        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
+        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updatedAt']}")
 
 def list_by_status(status):
     tasks = load_tasks()
     filtered = [tks for tks in tasks if tks["status"] == status]
 
     if not filtered:
-        print(f"Neunuma tarefa com status '{status}'.")
+        print(f"Nenhuma tarefa com status '{status}'.")
         return
     
-    print(f"Tarefas com status '{status}'.")
+    print(f"Tarefas com status '{status}':")
     for tks in filtered:
-        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updateAt']}")
+        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updatedAt']}")
 
 def mark_status_tasks(task_id, status):
     valid_status = {"todo", "in_progress", "done"}
     if status not in valid_status:
-        print(f"Status inválido. Escolha entre: {', '. join(valid_status)}")
+        print(f"Status inválido. Escolha entre: {', '.join(valid_status)}")
+        return
     
     tasks = load_tasks()
 
     for tks in tasks:
         if tks["id"] == task_id:
-            tks["status"] = "done"
+            tks["status"] = status
             tks["updatedAt"] = now()
             save_tasks(tasks)
             print(f"Tarefa atualizada: {tks['description']} -- status: '{status}'")
@@ -79,13 +79,14 @@ def update_tasks(task_id, new_description):
             tks["updatedAt"] = now()
             save_tasks(tasks)
             print(f"Descrição atualizada: {new_description}")
+            return
     print("ID inválido")
 
 def delete_task(task_id):
     tasks = load_tasks()
-    for tks in tasks:
+    for idx, tks in enumerate(tasks):
         if tks["id"] == task_id:
-            removed = tasks.pop(task_id)
+            removed = tasks.pop(idx)
             save_tasks(tasks)
             print(f"Tarefa removida: {removed['description']}")
             return
@@ -95,18 +96,14 @@ def main():
     parser = argparse.ArgumentParser(description="Rastreador de tarefas (CLI)")
     subparsers = parser.add_subparsers(dest="command")
 
-    # Adicionar tarefa
     parser_add = subparsers.add_parser("add", help="Adicionar uma nova tarefa")
     parser_add.add_argument("description", type=str, help="Descrição da tarefa")
 
-    # Listar tarefas
     subparsers.add_parser("list", help="Listar todas as tarefas")
 
-    # Concluir tarefa
     parser_complete = subparsers.add_parser("complete", help="Concluir uma tarefa")
     parser_complete.add_argument("id", type=int, help="Índice da tarefa a ser concluída")
 
-    # Remover tarefa
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
     parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
 
@@ -118,7 +115,7 @@ def main():
         case "list":
             list_tasks()
         case "complete":
-            complete_task(args.id)
+            mark_status_tasks(args.id, "done")
         case "delete":
             delete_task(args.id)
         case _:
