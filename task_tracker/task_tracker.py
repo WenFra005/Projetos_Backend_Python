@@ -70,9 +70,8 @@ def mark_status_tasks(task_id, status):
             return
     print("ID inválido")
 
-def update_tasks(task_id, new_description):
+def update_task(task_id, new_description):
     tasks = load_tasks()
-
     for tks in tasks:
         if tks["id"] == task_id:
             tks["description"] = new_description
@@ -107,6 +106,10 @@ def main():
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
     parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
 
+    parser_update = subparsers.add_parser("update", help="Atualizar descrição da tarefa")
+    parser_update.add_argument("id", type=int, help="Índice da tarefa a ser atualizada")
+    parser_update.add_argument("description", type=str, help="Nova descrição da tarefa")
+
     args = parser.parse_args()
 
     match args.command:
@@ -118,6 +121,8 @@ def main():
             mark_status_tasks(args.id, "done")
         case "delete":
             delete_task(args.id)
+        case "update":
+            update_task(args.id, args.description)
         case _:
             parser.print_help()
 
