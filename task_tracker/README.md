@@ -1,6 +1,6 @@
 # Task Tracker CLI
 
-**URL do projeto:** https://github.com/WenFra005/python_backend_projetos/tree/main/task_tracker
+**URL do projeto:** https://roadmap.sh/projects/task-tracker
 
 Um rastreador de tarefas simples via linha de comando em Python.
 
