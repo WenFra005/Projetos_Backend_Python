@@ -100,8 +100,11 @@ def main():
 
     subparsers.add_parser("list", help="Listar todas as tarefas")
 
-    parser_complete = subparsers.add_parser("complete", help="Concluir uma tarefa")
-    parser_complete.add_argument("id", type=int, help="Índice da tarefa a ser concluída")
+    parser_mark = subparsers.add_parser("mark", help="Atualizar status de uma tarefa")
+    parser_mark.add_argument("id", type=int, help="Índice da tarefa a ser atualizada com status")
+    
+    parser_list_status = subparsers.add_parser("list-status", help="Listar tarefas por status")
+    parser_list_status.add_argument("status", type=str, choices=["todo", "in_progress", "done"], help="Status da tarefa a ser filtrada")
 
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
     parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
@@ -117,8 +120,10 @@ def main():
             add_task(args.description)
         case "list":
             list_tasks()
-        case "complete":
-            mark_status_tasks(args.id, "done")
+        case "mark":
+            mark_status_tasks(args.id, "in_progress")
+        case "list-status":
+            list_by_status(args.status)
         case "delete":
             delete_task(args.id)
         case "update":
