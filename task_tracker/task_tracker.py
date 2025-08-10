@@ -33,24 +33,19 @@ def add_task(description):
     save_tasks(tasks)
     print(f"Tarefa adicionada: {description}")
 
-def list_tasks():
+def list_tasks(status=None):
     tasks = load_tasks()
-    if not tasks:
-        print("Nenhuma tarefa encontrada.")
-        return
+    if status:
+        tasks = [tks for tks in tasks if tks["status"] == status]
+        if not tasks:
+            print(f"Nenhuma tarefa com status '{status}'.")
+            return
+        print(f"Tarefas com status '{status}':")
+    else:
+        if not tasks:
+            print("Nenhuma tarefa encontrada.")
+            return
     for tks in tasks:
-        print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updatedAt']}")
-
-def list_by_status(status):
-    tasks = load_tasks()
-    filtered = [tks for tks in tasks if tks["status"] == status]
-
-    if not filtered:
-        print(f"Nenhuma tarefa com status '{status}'.")
-        return
-    
-    print(f"Tarefas com status '{status}':")
-    for tks in filtered:
         print(f"{tks['id']}. {tks['description']} - {tks['status']} | Criada em: {tks['createdAt']} - Atualizada em: {tks['updatedAt']}")
 
 def mark_status_tasks(task_id, status):
@@ -98,14 +93,12 @@ def main():
     parser_add = subparsers.add_parser("add", help="Adicionar uma nova tarefa")
     parser_add.add_argument("description", type=str, help="Descrição da tarefa")
 
-    subparsers.add_parser("list", help="Listar todas as tarefas")
+    parser_list = subparsers.add_parser("list", help="Listar tarefas")
+    parser_list.add_argument("--status", type=str, choices=["todo", "in_progress", "done"], help="Filtrar tarefas por status")
 
     parser_mark = subparsers.add_parser("mark", help="Atualizar status de uma tarefa")
     parser_mark.add_argument("id", type=int, help="Índice da tarefa a ser atualizada com status")
     
-    parser_list_status = subparsers.add_parser("list-status", help="Listar tarefas por status")
-    parser_list_status.add_argument("status", type=str, choices=["todo", "in_progress", "done"], help="Status da tarefa a ser filtrada")
-
     parser_delete = subparsers.add_parser("delete", help="Remover uma tarefa")
     parser_delete.add_argument("id", type=int, help="Índice da tarefa a ser removida")
 
@@ -119,11 +112,9 @@ def main():
         case "add":
             add_task(args.description)
         case "list":
-            list_tasks()
+            list_tasks(args.status)
         case "mark":
             mark_status_tasks(args.id, "in_progress")
-        case "list-status":
-            list_by_status(args.status)
         case "delete":
             delete_task(args.id)
         case "update":
